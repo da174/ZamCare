@@ -1,0 +1,25 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 200 60"
+  fill="none"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+>
+  <!-- Background Circle -->
+  <circle cx="30" cy="30" r="28" fill="#4CAF50" stroke="#388E3C" stroke-width="4" />
+
+  <!-- Heart Icon -->
+  <path
+    d="M30 42c-6-5-10-9-10-14 0-3 2-6 5-6 2 0 4 1 5 4 1-3 3-4 5-4 3 0 5 3 5 6 0 5-4 9-10 14z"
+    fill="#fff"
+  />
+
+  <!-- ZamCare Text -->
+  <text x="60" y="37" font-family="Arial, sans-serif" font-size="20" fill="#333" font-weight="bold">
+    ZamCare
+  </text>
+
+  <!-- Tagline -->
+  <text x="60" y="52" font-family="Arial, sans-serif" font-size="10" fill="#555">
+    Empowering Lives, Together
+  </text>
+</svg>
