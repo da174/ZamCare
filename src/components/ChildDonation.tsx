@@ -11,6 +11,7 @@ const databases = new Databases(client);
 const ChildDonation = () => {
   const [amount, setAmount] = useState<number>(0);
   const [receiptId, setReceiptId] = useState<string>('');
+  const [dataSaved, setDataSaved] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const amountInputRef = useRef<HTMLInputElement | null>(null);
@@ -41,7 +42,7 @@ const ChildDonation = () => {
     }
   };
 
-   const storeDonation = async () => {
+  const storeDonation = async () => {
     if (
       !amount ||
       !recipientNameInputRef.current?.value ||
@@ -56,7 +57,7 @@ const ChildDonation = () => {
       return;
     }
 
-   const donationData = {
+    const donationData = {
       donorName: donorNameInputRef.current?.value,
       donorCity: donorCityInputRef.current?.value,
       donorEmail: donorEmailInputRef.current?.value,
@@ -77,20 +78,25 @@ const ChildDonation = () => {
         donationData
       );
       console.log('Donation saved:', response);
+      setDataSaved(true); // Mark data as saved
       toast.success(`Donation successfully recorded with Receipt ID: ${receiptId}`, { position: "top-right" });
     } catch (error) {
       console.error('Error saving donation:', error);
+      setDataSaved(false);
       toast.error('Failed to save donation. Please try again.', { position: "top-right" });
     } finally {
       setLoading(false);
     }
   };
 
+  // The link to your Stripe payment page
+  const paymentLink = "https://donate.stripe.com/test_cN20292fLasQbGU9AA"; // Replace with your actual payment link
+
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-auto my-10">
       <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">Welcome to Our Child Donation Page</h2>
       <p className="text-center text-gray-700 mb-4">Every contribution makes a difference. Thank you for your support!</p>
-      
+
       <div className="mb-4">
         <label className="block font-medium text-gray-600">Donation Amount:</label>
         <input
@@ -177,56 +183,21 @@ const ChildDonation = () => {
       >
         {loading ? <BeatLoader size={10} color="#fff" /> : 'Confirm Donation'}
       </button>
+
+      {dataSaved && (
+        <div className="mt-6 text-center">
+          <a
+            href={paymentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-white bg-green-500 px-6 py-3 rounded-lg hover:bg-green-600"
+          >
+            Go to Payment Page
+          </a>
+        </div>
+      )}
     </div>
   );
-};
-
-const styles = {
-  donationContainer: {
-    padding: '20px',
-    backgroundColor: '#f9f9f9',
-    borderRadius: '10px',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  },
-  inputContainer: {
-    margin: '15px 0',
-    display: 'flex',
-    flexDirection: 'column' as const,
-  },
-  inputField: {
-    padding: '10px',
-    fontSize: '16px',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    outline: 'none',
-  },
-  confirmButton: {
-    marginTop: '20px',
-    padding: '10px',
-    fontSize: '16px',
-    color: '#fff',
-    backgroundColor: '#0073e6',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    width: '100%',
-  },
-  receiptContainer: {
-    marginTop: '20px',
-    padding: '15px',
-    backgroundColor: '#e7f3fe',
-    borderRadius: '5px',
-    textAlign: 'center' as const,
-  },
-  receiptLabel: {
-    marginBottom: '5px',
-    fontWeight: 'bold' as const,
-    color: '#0073e6',
-  },
-  receiptId: {
-    fontSize: '14px',
-    color: '#333',
-  },
 };
 
 export default ChildDonation;

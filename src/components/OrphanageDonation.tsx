@@ -12,13 +12,14 @@ const OrphanageDonation = () => {
   const [amount, setAmount] = useState<number>(0);
   const [receiptId, setReceiptId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isSaved, setIsSaved] = useState<boolean>(false); // Track if data is saved
 
   const amountInputRef = useRef<HTMLInputElement | null>(null);
   const orphanageNameInputRef = useRef<HTMLInputElement | null>(null);
   const donorNameInputRef = useRef<HTMLInputElement | null>(null);
   const donorCityInputRef = useRef<HTMLInputElement | null>(null);
-  const donorEmailInputRef = useRef<HTMLInputElement | null>(null);  // New email input ref
-  const commentInputRef = useRef<HTMLInputElement | null>(null)
+  const donorEmailInputRef = useRef<HTMLInputElement | null>(null);
+  const commentInputRef = useRef<HTMLInputElement | null>(null);
 
   const generateReceiptId = (donorName: string, amount: number, orphanageName: string) => {
     const timestamp = Date.now();
@@ -30,12 +31,12 @@ const OrphanageDonation = () => {
     setAmount(newAmount);
   };
 
- const storeDonation = async () => {
+  const storeDonation = async () => {
     const donorName = donorNameInputRef.current?.value || '';
     const orphanageName = orphanageNameInputRef.current?.value || '';
     const donorCity = donorCityInputRef.current?.value || '';
-    const donorEmail = donorEmailInputRef.current?.value || '';  // Get donor email
-    const comment = commentInputRef.current?.value || '';  // Get comment
+    const donorEmail = donorEmailInputRef.current?.value || '';
+    const comment = commentInputRef.current?.value || '';
 
     if (!amount || !donorName || !orphanageName || !donorCity || !donorEmail) {
       toast.error('Please fill in all the required fields.', { position: "top-right" });
@@ -46,14 +47,13 @@ const OrphanageDonation = () => {
     setReceiptId(generatedReceiptId);
 
     const donationData = {
-       donorName,
+      donorName,
       donorCity,
       amount,
       orphanageName,
       receiptId: generatedReceiptId,
-      donorEmail,  // Save donor's email
-      comment,  
-     
+      donorEmail,
+      comment,
     };
 
     setLoading(true);
@@ -67,13 +67,17 @@ const OrphanageDonation = () => {
       );
       console.log('Donation saved:', response);
       toast.success(`Donation successfully recorded with Receipt ID: ${generatedReceiptId}`, { position: "top-right" });
+      setIsSaved(true); // Mark as saved
     } catch (error) {
       console.error('Error saving donation:', error);
       toast.error('Failed to save donation. Please try again.', { position: "top-right" });
+      setIsSaved(false);
     } finally {
       setLoading(false);
     }
   };
+
+  const paymentLink = "https://donate.stripe.com/test_cN20292fLasQbGU9AA";
 
   return (
     <div style={styles.donationContainer}>
@@ -109,8 +113,9 @@ const OrphanageDonation = () => {
           placeholder="Enter your name"
           style={styles.inputField}
         />
-            </div>
-             <div style={styles.inputContainer}>
+      </div>
+
+      <div style={styles.inputContainer}>
         <label>Donor Email:</label>
         <input
           ref={donorEmailInputRef}
@@ -150,6 +155,19 @@ const OrphanageDonation = () => {
       <button style={styles.confirmButton} onClick={storeDonation} disabled={loading}>
         {loading ? <BeatLoader size={10} color="#fff" /> : 'Confirm Donation'}
       </button>
+
+      {isSaved && (
+        <div className="mt-6 text-center">
+          <a
+            href={paymentLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block text-white bg-green-500 px-6 py-3 rounded-lg hover:bg-green-600"
+          >
+            Go to Payment Page
+          </a>
+        </div>
+      )}
     </div>
   );
 };

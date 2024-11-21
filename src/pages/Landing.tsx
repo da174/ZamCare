@@ -1,44 +1,36 @@
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
-import { account } from '../AppwriteService';  // Assuming AppwriteService is set up
+import { account } from '../AppwriteService'; // Assuming AppwriteService is set up
 import { motion } from 'framer-motion';
 
 const LandingPage = () => {
     const navigate = useNavigate();
 
     // Effect to check if a user is logged in and their role
-    useEffect(() => {
-        const checkUserRole = async () => {
-            try {
-                // Step 1: Check if the user is logged in
-                const user = await account.get();  // Fetch logged-in user
+    // useEffect(() => {
+    //     const checkUserRole = async () => {
+    //         try {
+    //             const user = await account.get(); // Fetch logged-in user
+    //             if (user) {
+    //                 const role = localStorage.getItem('userRole'); // Assuming you stored the role in localStorage
+    //                 if (role === 'volunteer') {
+    //                     navigate('/home'); // Redirect to volunteer page
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.error('Error checking user role:', error);
+    //         }
+    //     };
 
-                // Step 2: If user is logged in, check if they are a volunteer
-                if (user) {
-                    // Here, you can fetch the user role from your database if needed
-                    // For now, we are assuming the user is a volunteer if logged in
-                    const role = localStorage.getItem('userRole');  // Assuming you stored the role in localStorage
-
-                    if (role === 'volunteer') {
-                        navigate('/volunteer');  // Redirect to volunteer page if they are a volunteer
-                    }
-                }
-            } catch (error) {
-                console.error('Error checking user role:', error);
-            }
-        };
-
-        checkUserRole();
-    }, [navigate]);
+    //     checkUserRole();
+    // }, [navigate]);
 
     return (
         <div
             className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }}
+            // style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }}
         >
             {/* Background Particle Effect */}
-           
-            {/* Semi-transparent Overlay */}
             <motion.div
                 className="absolute inset-0 bg-black bg-opacity-50 z-0"
                 initial={{ opacity: 0 }}
@@ -87,6 +79,22 @@ const LandingPage = () => {
                     </Link>
                 </motion.div>
             </motion.div>
+
+            {/* Stats Section */}
+            <div className="flex justify-around mt-8">
+                <div className="text-center">
+                    <h3 className="text-3xl font-bold text-indigo-600">500+</h3>
+                    <p className="text-gray-700">Children Supported</p>
+                </div>
+                <div className="text-center">
+                    <h3 className="text-3xl font-bold text-indigo-600">$250K+</h3>
+                    <p className="text-gray-700">Donations Received</p>
+                </div>
+                <div className="text-center">
+                    <h3 className="text-3xl font-bold text-indigo-600">120+</h3>
+                    <p className="text-gray-700">Volunteers</p>
+                </div>
+            </div>
 
             {/* Additional Info Section */}
             <motion.div

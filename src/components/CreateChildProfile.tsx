@@ -6,6 +6,8 @@ import { toast } from 'react-toastify';
 import { useDropzone } from 'react-dropzone';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from './shared/Loader';
+import { File } from 'lucide-react';
+import React from 'react';
 
 const databases = new Databases(client);
 const storage = new Storage(client);

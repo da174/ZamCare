@@ -166,7 +166,7 @@ const OrphanagePage: React.FC = () => {
                         <li className="mb-2">
                             <button
                                 className="w-full text-left px-4 py-2 rounded-md hover:bg-blue-700"
-                                onClick={() => navigate('/donation-details')}
+                                onClick={() => navigate('/payment')}
                             >
                                 View Donations 
                             </button>
@@ -176,7 +176,7 @@ const OrphanagePage: React.FC = () => {
                                 className="w-full text-left px-4 py-2 rounded-md hover:bg-blue-700"
                                 onClick={() => navigate('/notice')}
                             >
-                                View Donations 
+                                View Request
                             </button>
                         </li>
                         <li className="mb-2">

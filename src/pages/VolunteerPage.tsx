@@ -94,7 +94,18 @@ const VolunteerPage = () => {
 
 
     return (
-        <>
+        <>  <header className="bg-blue-700 text-white py-4 px-6 flex items-center">
+  <img 
+    src="Zamcare-log.svg" 
+    width="200px" 
+    height="100" 
+    alt="ZamCare Logo" 
+    className="mr-4" // Adds space between the logo and the text
+  />
+  <h1 className="text-3xl font-bold text-center flex-1 animate__animated animate__fadeIn animate__delay-1s">
+    ZamCare
+  </h1>
+</header>
             <div className="flex min-h-screen bg-gray-100">
                 <nav className="w-1/4 bg-blue-600 text-white p-4 flex flex-col space-y-4">
                     <Link to="/home">
@@ -126,6 +137,12 @@ const VolunteerPage = () => {
                         <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
                             <FaHandsHelping />
                             <span> Make Request</span>
+                        </button>
+                    </Link>
+                     <Link to="/volunteer-form">
+                        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
+                            <FaHandsHelping />
+                            <span> Register</span>
                         </button>
                     </Link>
                     <button

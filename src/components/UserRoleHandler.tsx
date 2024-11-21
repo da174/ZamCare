@@ -42,21 +42,21 @@ const UserRoleHandler = () => {
                             navigate('/orphanage');
                             break;
                         case 'donor':
-                            navigate('/board');
+                            navigate('/home');
                             break;
                         case 'volunteer':
-                            navigate('/volunteer');
+                            navigate('/home');
                             break;
                         default:
                             navigate('/home');
                             break;
                     }
                 } else {
-                    navigate('/home'); // Redirect to home if role not found
+                    navigate('/blank'); // Redirect to home if role not found
                 }
             } catch (error) {
                 console.error('Error fetching user role or navigating:', error);
-                navigate('/home'); // In case of error, navigate to home
+                navigate('/unknown'); // In case of error, navigate to home
             } finally {
                 setIsLoading(false);  // Set loading to false when data is fetched
             }

@@ -26,6 +26,8 @@ import DonorDashboard from './pages/DonorDashboard';
 
 import UserProfile from './components/userProfile';
 import React from 'react';
+import DonationDetailsPage from './pages/DonationDetailsPage';
+
 
 
 const App = () => {
@@ -44,11 +46,13 @@ const App = () => {
                 <Route path="/donation-details" element={<GoodsDonationPage />} />
 
                 <Route path="/goods" element={<GoodsDonationPage />} />
+                <Route path='/payment' element = {<DonationDetailsPage />} />
                 <Route path="/role" element={<UserRoleHandler />} />
                 <Route path="/board" element={<DonorDashboard/>} />
                 <Route path="/notice" element={<ContactOrphanageNotice />} />
                 <Route path='/user-profeile' element = {<UserProfile />} />
-                <Route path='/request' element = {<VolunteerRequestForm />} />
+                <Route path='/request' element={<VolunteerRequestForm />} />
+                <Route path="/role-handler" element={<UserRoleHandler />} />
                 
                     
                     <Route path="/" element={<Landing />} />
