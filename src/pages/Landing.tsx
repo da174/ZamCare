@@ -7,32 +7,32 @@ const LandingPage = () => {
     const navigate = useNavigate();
 
     // Effect to check if a user is logged in and their role
-    // useEffect(() => {
-    //     const checkUserRole = async () => {
-    //         try {
-    //             const user = await account.get(); // Fetch logged-in user
-    //             if (user) {
-    //                 const role = localStorage.getItem('userRole'); // Assuming you stored the role in localStorage
-    //                 if (role === 'volunteer') {
-    //                     navigate('/home'); // Redirect to volunteer page
-    //                 }
-    //             }
-    //         } catch (error) {
-    //             console.error('Error checking user role:', error);
-    //         }
-    //     };
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const user = await account.get(); // Fetch logged-in user
+                if (user) {
+                    const role = localStorage.getItem('userRole'); // Assuming you stored the role in localStorage
+                    if (role === 'volunteer') {
+                        navigate('/home'); // Redirect to volunteer page
+                    }
+                }
+            } catch (error) {
+                console.error('Error checking user role:', error);
+            }
+        };
 
-    //     checkUserRole();
-    // }, [navigate]);
+        checkUserRole();
+    }, [navigate]);
 
     return (
         <div
             className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
-            // style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }}
+            // style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }} // Replace with your image path
         >
-            {/* Background Particle Effect */}
+            {/* Background Overlay */}
             <motion.div
-                className="absolute inset-0 bg-black bg-opacity-50 z-0"
+                className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black bg-opacity-70 z-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.5 }}
                 transition={{ duration: 1.5 }}
@@ -40,7 +40,7 @@ const LandingPage = () => {
 
             {/* Content Box */}
             <motion.div
-                className="relative z-10 text-center px-8 py-12 bg-white bg-opacity-80 rounded-lg shadow-lg backdrop-blur-md max-w-xl"
+                className="relative z-10 text-center px-8 py-12 bg-white bg-opacity-90 rounded-lg shadow-lg backdrop-blur-md max-w-xl"
                 initial={{ opacity: 0, scale: 0.9, y: -50 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{ duration: 1, ease: 'easeInOut' }}
@@ -57,7 +57,7 @@ const LandingPage = () => {
 
                 {/* Mission Statement */}
                 <motion.p
-                    className="text-lg text-gray-800 mb-8"
+                    className="text-lg text-gray-700 mb-8"
                     initial={{ y: -20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 1, duration: 1 }}
@@ -81,20 +81,21 @@ const LandingPage = () => {
             </motion.div>
 
             {/* Stats Section */}
-            <div className="flex justify-around mt-8">
-                <div className="text-center">
-                    <h3 className="text-3xl font-bold text-indigo-600">500+</h3>
-                    <p className="text-gray-700">Children Supported</p>
-                </div>
-                <div className="text-center">
-                    <h3 className="text-3xl font-bold text-indigo-600">$250K+</h3>
-                    <p className="text-gray-700">Donations Received</p>
-                </div>
-                <div className="text-center">
-                    <h3 className="text-3xl font-bold text-indigo-600">120+</h3>
-                    <p className="text-gray-700">Volunteers</p>
-                </div>
-            </div>
+            <div className="flex flex-wrap justify-around items-center mt-8 gap-8 bg-gray-800 p-6 rounded-lg shadow-md">
+  <div className="text-center">
+    <h3 className="text-4xl font-extrabold text-indigo-500">500+</h3>
+    <p className="text-lg text-gray-300 mt-2">Children Supported</p>
+  </div>
+  <div className="text-center">
+    <h3 className="text-4xl font-extrabold text-indigo-500">$250K+</h3>
+    <p className="text-lg text-gray-300 mt-2">Donations Received</p>
+  </div>
+  <div className="text-center">
+    <h3 className="text-4xl font-extrabold text-indigo-500">120+</h3>
+    <p className="text-lg text-gray-300 mt-2">Volunteers</p>
+  </div>
+</div>
+
 
             {/* Additional Info Section */}
             <motion.div

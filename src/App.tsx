@@ -27,6 +27,7 @@ import DonorDashboard from './pages/DonorDashboard';
 import UserProfile from './components/userProfile';
 import React from 'react';
 import DonationDetailsPage from './pages/DonationDetailsPage';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 
@@ -53,7 +54,30 @@ const App = () => {
                 <Route path='/user-profeile' element = {<UserProfile />} />
                 <Route path='/request' element={<VolunteerRequestForm />} />
                 <Route path="/role-handler" element={<UserRoleHandler />} />
-                
+                 <Route
+                    path="/home"
+                    element={
+                        <ProtectedRoute>
+                            <Home />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/volunteer"
+                    element={
+                        <ProtectedRoute>
+                            <VolunteerPage />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/children-page"
+                    element={
+                        <ProtectedRoute>
+                            <ChildrenPage />
+                        </ProtectedRoute>
+                    }
+                />
                     
                     <Route path="/" element={<Landing />} />
                 <Route path="/opportunity" element={<CreateOpportunityForm />} />

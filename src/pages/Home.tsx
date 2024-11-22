@@ -1,81 +1,115 @@
     import { useEffect, useState } from 'react';
-    import { Link, useNavigate } from 'react-router-dom';
-    import { Databases } from 'appwrite';
-    import { FaHeart, FaHandsHelping, FaHome, FaDonate } from 'react-icons/fa';
-    import { motion } from 'framer-motion';
-    import { Line } from 'react-chartjs-2';
-    import { Chart as ChartJS, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement } from 'chart.js';
-    import React from 'react';
-    import { client, account } from '../AppwriteService';
+import { Link, useNavigate } from 'react-router-dom';
+import { Databases } from 'appwrite';
+import { FaHeart, FaHandsHelping, FaHome, FaDonate } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement } from 'chart.js';
+import React from 'react';
+import { client, account } from '../AppwriteService';
 
-    // Initialize ChartJS components
-    ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement);
+// Initialize ChartJS components
+ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement);
 
-    interface Child {
-    photoUrl: any;
-    age: number | null;
-    educationStatus: string;
-    healthStatus: string;
-    hobbies: string[];
-    createdBy: string;
-    $id: string;
-    name: string;
-    bio?: string;
+
+interface Child {
+  photoUrl: any;
+  age: number | null;
+  educationStatus: string;
+  healthStatus: string;
+  hobbies: string[];
+  createdBy: string;
+  $id: string;
+  name: string;
+  bio?: string;
+}
+
+interface Volunteer {
+  $id: string;
+  name: string;
+  profilePictureUrl: string;
+  bio: string;
+  location: string;
+}
+
+const databases = new Databases(client);
+
+const Home = () => {
+  const [childrenProfile, setChildrenProfile] = useState<Child[]>([]);
+  const [volunteerProfiles, setVolunteerProfiles] = useState<Volunteer[]>([]);
+  const [opportunities, setOpportunities] = useState<number>(0);
+  const [opportunityStatus, setOpportunityStatus] = useState<OpportunityStatus>({
+    isOpportunityAvailable: false,
+    isRequestApproved: false,
+  });
+  const navigate = useNavigate();
+
+  const checkSession = async () => {
+    try {
+      await account.getSession('current');
+    } catch (error) {
+      navigate('/login');
     }
+  };
 
-    interface Volunteer {
-    $id: string;
-    name: string;
-    profilePictureUrl: string;
-    bio: string;
-    location: string;
+  const fetchChildrenProfile = async () => {
+    try {
+      const childrenResponse = await databases.listDocuments(
+        import.meta.env.VITE_DATABASE_ID,
+        import.meta.env.VITE_CHILDREN_COLLECTION_ID
+      );
+      setChildrenProfile(childrenResponse.documents as unknown as Child[]);
+    } catch (error) {
+      console.error('Error fetching children profiles:', error);
     }
+  };
 
-    const databases = new Databases(client);
+  const fetchVolunteerProfiles = async () => {
+    try {
+      const volunteerResponse = await databases.listDocuments(
+        import.meta.env.VITE_DATABASE_ID,
+        import.meta.env.VITE_VOLUNTEER_COLLECTION_ID
+      );
+      setVolunteerProfiles(volunteerResponse.documents as unknown as Volunteer[]);
+    } catch (error) {
+      console.error('Error fetching volunteer profiles:', error);
+    }
+  };
 
-    const Home = () => {
-    const [childrenProfile, setChildrenProfile] = useState<Child[]>([]);
-    const [volunteerProfiles, setVolunteerProfiles] = useState<Volunteer[]>([]);
-    const navigate = useNavigate();
+  const fetchOpportunities = async () => {
+  try {
+    const opportunitiesResponse = await databases.listDocuments(
+      import.meta.env.VITE_DATABASE_ID,
+      import.meta.env.VITE_VOLUNTEER_OPPORTUNITIES_COLLECTION_ID
+    );
+    const totalOpportunities = opportunitiesResponse.total;
+    setOpportunities(totalOpportunities);
 
-    const checkSession = async () => {
-        try {
-            await account.getSession('current');
-        } catch (error) {
-            navigate('/login');
-        }
-    };
+    // Update opportunityStatus dynamically
+    setOpportunityStatus({
+      isOpportunityAvailable: totalOpportunities > 0,
+      isRequestApproved: false, // Adjust if you have logic to determine approval
+    });
+  } catch (error) {
+    console.error('Error fetching opportunities:', error);
+  }
+};
 
-    useEffect(() => {
-        checkSession();
 
-        const fetchChildrenProfile = async () => {
-            try {
-                const response = await databases.listDocuments(
-                    import.meta.env.VITE_DATABASE_ID,
-                    import.meta.env.VITE_CHILDREN_COLLECTION_ID
-                );
-                setChildrenProfile(response.documents as unknown as Child[]);
-            } catch (error) {
-                console.error('Error fetching children profiles:', error);
-            }
-        };
+  
 
-        const fetchVolunteerProfiles = async () => {
-            try {
-                const response = await databases.listDocuments(
-                    import.meta.env.VITE_DATABASE_ID,
-                    import.meta.env.VITE_VOLUNTEER_COLLECTION_ID
-                );
-                setVolunteerProfiles(response.documents as unknown as Volunteer[]);
-            } catch (error) {
-                console.error('Error fetching volunteer profiles:', error);
-            }
-        };
 
-        fetchChildrenProfile();
-        fetchVolunteerProfiles();
-    }, []);
+ useEffect(() => {
+  const fetchData = async () => {
+    await checkSession();
+    await fetchChildrenProfile();
+    await fetchVolunteerProfiles();
+    await fetchOpportunities(); // This will update opportunityStatus
+  };
+
+  fetchData();
+}, []);
+
 
     const handleLogout = async () => {
         try {
@@ -120,32 +154,50 @@
            
             <div className="flex flex-1">
                 <nav className="w-1/4 bg-blue-600 text-white p-4 flex flex-col space-y-4">
-                    <Link to="/home">
-                        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
-                            <FaHome />
-                            <span>Home</span>
-                        </button>
-                    </Link>
-                    <Link to="/board">
-                        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
-                            <FaDonate />
-                            <span>Donate</span>
-                        </button>
-                    </Link>
-                    <Link to="/volunteer">
-                        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
-                            <FaHandsHelping />
-                            <span>Volunteers</span>
-                        </button>
-                    </Link>
-                    <button
-                        onClick={handleLogout}
-                        className="w-full px-4 py-2 bg-red-500 hover:bg-red-400 font-medium rounded-md flex items-center space-x-2"
-                    >
-                        <FaHeart />
-                        <span>Logout</span>
-                    </button>
-                </nav>
+    {/* Home Link */}
+    <Link to="/home">
+        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
+            <FaHome />
+            <span>Home</span>
+        </button>
+    </Link>
+
+    {/* Donate Link */}
+    <Link to="/board">
+        <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
+            <FaDonate />
+            <span>Donate</span>
+        </button>
+    </Link>
+
+   {opportunityStatus.isOpportunityAvailable ? (
+  <Link to="/volunteer">
+    <button className="w-full px-4 py-2 bg-blue-500 hover:bg-blue-400 font-medium rounded-md flex items-center space-x-2">
+      <FaHandsHelping />
+      <span>Volunteers</span>
+    </button>
+  </Link>
+) : (
+  <button
+    className="w-full px-4 py-2 bg-gray-400 font-medium rounded-md flex items-center space-x-2 cursor-not-allowed"
+    disabled
+  >
+    <FaHandsHelping />
+    <span>Volunteers</span>
+  </button>
+)}
+
+
+    {/* Logout Button */}
+    <button
+        onClick={handleLogout}
+        className="w-full px-4 py-2 bg-red-500 hover:bg-red-400 font-medium rounded-md flex items-center space-x-2"
+    >
+        <FaHeart />
+        <span>Logout</span>
+    </button>
+</nav>
+
 
                 <main className="w-3/4 p-6 space-y-8">
                     {/* Welcome Section */}

@@ -1,18 +1,37 @@
+import { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { account } from '../AppwriteService';
 import React from 'react';
-import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
 
-interface ProtectedRouteProps {
-    role: string | null;
-    requiredRole: string;
-    children: ReactNode;
-}
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ role, requiredRole, children }) => {
-    if (role !== requiredRole) {
-        return <Navigate to="/unauthorized" />;
+    useEffect(() => {
+        const checkSession = async () => {
+            try {
+                await account.getSession('current');
+                setIsAuthenticated(true);
+            } catch (error) {
+                setIsAuthenticated(false);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkSession();
+    }, []);
+
+    if (isLoading) {
+        return <div>Loading...</div>; // Show a loading spinner or placeholder
     }
-    return <>{children}</>;
+
+    if (!isAuthenticated) {
+        return <Navigate to="/login" replace />;
+    }
+
+    return children;
 };
 
 export default ProtectedRoute;
