@@ -28,7 +28,7 @@ const LandingPage = () => {
     return (
         <div
             className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
-            // style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }} // Replace with your image path
+            style={{ backgroundImage: `url('./assets/zamcare-bg.jpg')` }} // Replace with your image path
         >
             {/* Background Overlay */}
             <motion.div

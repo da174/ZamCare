@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { account } from '../AppwriteService';
 import React from 'react';
+import {  PuffLoader } from 'react-spinners'; // Import a spinner from react-spinners
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -24,7 +25,12 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
     }, []);
 
     if (isLoading) {
-        return <div>Loading...</div>; // Show a loading spinner or placeholder
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <PuffLoader
+ color="#3498db" size={50} />
+            </div>
+        );
     }
 
     if (!isAuthenticated) {
